@@ -62,9 +62,12 @@ class Game():
             node = Node(identification=nodeID, action=action, level=level)
             print(f"child: {node.id} {node.action} {node.level}")
             method.add(node)
-        self.checking = None   
-        print("(Parent node removed ...)")
-        print("(Adding child nodes to stack/queue ...)")  
+        self.checking = None 
+        if isinstance(method, Queue):
+            print("(Queueing child nodes ...)")  
+        elif isinstance(method, Stack):
+            print("(Pushing child nodes ...)")
+
 
 
     def explore(self, node):
@@ -82,19 +85,20 @@ class Game():
 
             while self.solution != self.goal:
                 print("............................")
-                print("Current Nodes in Stack or Queue:")
+                print("Current Nodes in Stack:")
                 for i in stack.content:
-                    print(i.id)
+                    print(f"{i.id} {i.action}")
                 print("............................")
                 check = stack.remove()
                 self.checking = check
                 self.explore(check)
-                print(f"Checking Node: ID-({check.id}) ACTION-({check.action}) LEVEL-({check.level})")
+                print(f"Popped Node: ID-({check.id}) ACTION-({check.action}) LEVEL-({check.level})")
                 if check.level < 3:
                     self.expand(parent=check, method=stack, actions=self.actions)
                     
 
             else:
+                print("")
                 print("==========   Unexplored  ============")
                 for i in stack.content:
                     print(f"{i.id} {i.action}")
@@ -105,7 +109,7 @@ class Game():
                 print(f"States explored: {len(self.explored)}")
                 print("========== The solution ==============")
                 for step in self.nodeSolution:
-                    print(step.action)
+                    print(f"{step.id} {step.action}")
                 print("NOW IN THE WORKPLACE! WORK YOUR ASS OFF!")
 
         elif self.method == "bfs":
@@ -116,20 +120,20 @@ class Game():
 
             while self.solution != self.goal:
                 print("............................")
+                print("Current Nodes in Queue:")
                 for i in queue.content:
-                    print(i.id)
+                    print(f"{i.id} {i.action}")
                 print("............................")
                 check = queue.remove()
-                print(f"check: {check.id}")
                 self.checking = check
                 self.explore(check)
-                print("==================================================")
-                print(f"checking: {check.action}")
+                print(f"Dequeued Node: ID-({check.id}) ACTION-({check.action}) LEVEL-({check.level})")
                 if check.level < 3:
                     self.expand(parent=check, method=queue, actions=self.actions)
                     
 
             else:
+                print("")
                 print("==========  Unexplored ============")
                 for i in queue.content:
                     print(f"{i.id} {i.action}")
@@ -154,6 +158,7 @@ print("Obstacle: b-bed d-flying Doritos, n-Netflix portal (obstacles may be repe
 print("Actions: jump, duck, and incant")
 print("Rule: Agent should jump over a bed, duck under flying Doritos, and incant when faced with a Netflix portal.")
 print("Note: Agent starts with a state found in an empty space and gets to its workplace once all obstacles are cleared.")
+print('Note: "If there is a will, there is a way." The agent will always be able to find a way to reach its workplace.')
 print("")
 print("")
 print("Please layout the obstacles (b, d, n) and state the search method (bfs or dfs).")
